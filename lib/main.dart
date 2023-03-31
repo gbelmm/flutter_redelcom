@@ -83,6 +83,13 @@ class _RedelcomAppState extends State<RedelcomApp> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
   Future<void> _init() async {
     if (Platform.isAndroid) {
       final receivedIntent = await ReceiveIntent.getInitialIntent();
@@ -93,38 +100,12 @@ class _RedelcomAppState extends State<RedelcomApp> {
         receivedIntent?.extra?.forEach((key, value) {
           if (key == 'android.intent.extra.TEXT') {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-              AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.error,
-                      animType: AnimType.topSlide,
-                      dismissOnTouchOutside: false,
-                      title: 'Respuesta redelcom',
-                      desc: '',
-                      btnOkText: 'OK',
-                      btnOkOnPress: () {})
-                  .show();
-              AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.error,
-                      animType: AnimType.topSlide,
-                      dismissOnTouchOutside: false,
-                      title: 'Respuesta redelcom',
-                      desc: jsonEncode(value),
-                      btnOkText: 'OK',
-                      btnOkOnPress: () {})
-                  .show();
+              NotificationsService.showSnackBar(jsonEncode(value));
             });
           }
         });
       });
     } else {}
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _init();
   }
 
   @override
